@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
-import { getCustomRepository } from "typeorm";
-import { SettingsRepository } from "../repositories/SettingsRepository";
+import { SettingsService } from "../services/SettingsService";
 
 class SettingsController{
   async create(request: Request, response: Response){
@@ -8,18 +7,21 @@ class SettingsController{
   //desestruturando o body
   const { chat, username } = request.body;
 
-  const settingsRepository = getCustomRepository(SettingsRepository);
+  const settingsService = new SettingsService();
+  
+  //deu certo o create do usuário
+  try{
+    const settings = await settingsService.create({chat, username});
 
-  //objeto recebendo o dados para criar o usuário
-  const settings = settingsRepository.create({
-    chat,
-    username
-  });
+    return response.json( settings );
+  }catch(err){
+    //caso o usuário já exista
+    return response.status(400).json({
+      message: err.message,
+    })
 
-  //salvando o usuário
-  await settingsRepository.save(settings);
-
-  return response.json( settings );
+  }
+  
 }
 }
 
