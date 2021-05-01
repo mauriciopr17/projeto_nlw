@@ -11,8 +11,8 @@ import { v4 as uuid } from "uuid";
 import { User } from "./User";
 
 
-@Entity("messages")
-class Message{
+@Entity("connections")
+class Connection{
 
   @PrimaryColumn()
   id: string;
@@ -21,7 +21,7 @@ class Message{
   admin_id: string;
 
   @Column()
-  text: string;
+  socket_id: string;
   
   @JoinColumn({ name: "user_id"})//join do usuário com o user_id
   @ManyToOne(() => User)//muitas mensagens para um usuário
@@ -33,7 +33,9 @@ class Message{
   @CreateDateColumn()
   created_at: Date;
 
-  
+  @CreateDateColumn()
+  updated_at: Date;
+
   constructor(){
 
     if( !this.id){
@@ -43,4 +45,4 @@ class Message{
 
 }
 
-export { Message };
+export { Connection };
