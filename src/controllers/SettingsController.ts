@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { CircularRelationsError } from "typeorm";
 import { SettingsService } from "../services/SettingsService";
 
 class SettingsController{
@@ -21,8 +22,29 @@ class SettingsController{
     })
 
   }
+  }
+
+  async findByUsername( request: Request, response: Response){
+    const { username } = request.params;
+
+    const settingsService = new SettingsService();
+
+    const settings = await settingsService.findByUserName(username);
+
+    return response.json(settings);
+  }
+
+  async update( request: Request, response: Response){
+    const { username } = request.params;
+    const { chat } = request.body;
+
+    const settingsService = new SettingsService();
+
+    const settings = await settingsService.update(username, chat);
+
+    return response.json(settings);
+  }
   
-}
 }
 
 export { SettingsController };
